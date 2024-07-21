@@ -1,0 +1,11 @@
+[project]
+name = "cmarket-user-service"
+dependencies = [
+    "flask",
+]
+version = "0.1"
+description = "microservice user api for student project"
+
+[build-system]
+requires = ["flit_core<4"]
+build-backend = "flit_core.buildapi"
