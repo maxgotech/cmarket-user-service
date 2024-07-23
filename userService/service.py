@@ -9,6 +9,8 @@ userFields = {
     "secondname": fields.String,
     "mail": fields.String,
     "about": fields.String,
+    "role": fields.String,
+    "pfp_path": fields.String,
 }
 
 userMessage_fields = {
@@ -42,6 +44,7 @@ class Users(Resource):
     @marshal_with(userFields)
     def get(self):
         users = db.session.execute(db.select(models.UserModel)).scalars().all()
+
         return users, 200
 
 
@@ -65,20 +68,28 @@ class User(Resource):
             user = db.session.execute(
                 db.select(models.UserModel).where(models.UserModel.mail == mail)
             ).scalar()
-        print(user)
+
         if not user:
             abort(404, message="User not Found")
+
         return user, 200
 
     @marshal_with(userMessage_fields)
     def post(self):
         args = post_args.parse_args()
+        
         check = db.session.execute(
             db.select(models.UserModel).where(models.UserModel.mail == args["mail"])
         ).scalar_one_or_none()
 
-        if check:
-            abort(409, message="This email is already registered")
+        check2 = db.session.execute(
+            db.select(models.UserModel).where(
+                models.UserModel.password == args["password"]
+            )
+        ).scalar_one_or_none()
+
+        if check or check2:
+            abort(409, message="This email or password is already registered")
 
         user = models.UserModel(**args)
         db.session.add(user)
@@ -86,19 +97,28 @@ class User(Resource):
         created = db.session.execute(
             db.select(models.UserModel).where(models.UserModel.mail == args["mail"])
         ).scalar()
+
         return {"message": "success", "user": created}, 201
 
     @marshal_with(userMessage_fields)
     def patch(self):
         args = patch_args.parse_args()
+            
         user = db.session.execute(
             db.select(models.UserModel).where(models.UserModel.id == args["id"])
-        ).scalar_one()
+        ).scalar_one_or_none()
+
+        if not user:
+            abort(404, message="User not Found")
+            return
+
         del args["id"]
         user.update(**args)
         db.session.commit()
+
         return {"message": "success", "user": user}, 200
 
+    @marshal_with(userMessage_fields)
     def delete(self):
         id = request.args.get("id", default=0)
         mail = request.args.get("mail", default="")
@@ -112,15 +132,17 @@ class User(Resource):
         if id:
             user = db.session.execute(
                 db.select(models.UserModel).where(models.UserModel.id == id)
-            ).scalar()
+            ).scalar_one_or_none()
+            
         elif mail:
             user = db.session.execute(
                 db.select(models.UserModel).where(models.UserModel.mail == mail)
-            ).scalar()
+            ).scalar_one_or_none()
 
         if not user:
             abort(404, message="User not Found")
 
         db.session.delete(user)
         db.session.commit()
-        return {"message": "success"}, 200
+
+        return {"message": "success", "user": user}, 200
