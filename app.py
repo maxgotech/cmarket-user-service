@@ -1,10 +1,8 @@
 from flask import Flask
 import os
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.orm import declarative_base
 
-Base = declarative_base()
-db = SQLAlchemy(model_class=Base)
+db = SQLAlchemy()
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = os.environ["DATABASE_URI"]
