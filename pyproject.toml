@@ -3,7 +3,7 @@ name = "cmarket-user-service"
 dependencies = [
     "flask",
 ]
-version = "0.1"
+version = "1.0"
 description = "microservice user api for student project"
 
 [tool.pytest.ini_options]
