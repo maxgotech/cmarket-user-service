@@ -6,6 +6,9 @@ dependencies = [
 version = "0.1"
 description = "microservice user api for student project"
 
+[tool.pytest.ini_options]
+addopts = "--cov --cov-report term-missing"
+
 [build-system]
 requires = ["flit_core<4"]
 build-backend = "flit_core.buildapi"

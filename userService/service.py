@@ -77,7 +77,7 @@ class User(Resource):
     @marshal_with(userMessage_fields)
     def post(self):
         args = post_args.parse_args()
-        
+
         check = db.session.execute(
             db.select(models.UserModel).where(models.UserModel.mail == args["mail"])
         ).scalar_one_or_none()
@@ -103,7 +103,7 @@ class User(Resource):
     @marshal_with(userMessage_fields)
     def patch(self):
         args = patch_args.parse_args()
-            
+
         user = db.session.execute(
             db.select(models.UserModel).where(models.UserModel.id == args["id"])
         ).scalar_one_or_none()
@@ -133,7 +133,7 @@ class User(Resource):
             user = db.session.execute(
                 db.select(models.UserModel).where(models.UserModel.id == id)
             ).scalar_one_or_none()
-            
+
         elif mail:
             user = db.session.execute(
                 db.select(models.UserModel).where(models.UserModel.mail == mail)

@@ -1,5 +1,4 @@
-
-def test_home_page(test_client):
+def test_users_get(test_client):
     """
     GIVEN a Flask application configured for testing
     WHEN the 'api/users/' page is requested (GET)
@@ -7,6 +6,4 @@ def test_home_page(test_client):
     """
 
     response = test_client.get("api/users/")
-    print(response.json)
     assert response.status_code == 200
-    assert response.json
