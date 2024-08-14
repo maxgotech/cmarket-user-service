@@ -22,3 +22,10 @@ docker compose up -d
 ```
 docker stop $(docker ps -q)
 ```
+
+> [!TIP]
+> Для просмотра базы данных можно использовать phphmyadmin.
+
+phpmyadmin: http://127.0.0.1:8080/ или http://localhost:8080/
+  - пользователь: root
+  - пароль: root
